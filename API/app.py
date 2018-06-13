@@ -11,7 +11,12 @@ REQUESTEDLANGUAGE = []
 def Mobiledata(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agend, encoding and language which fits perfectly
-    return "tbd"
+    accept_encoding = ""
+    user_agent = ""
+    accept_lang = lang
+    newheader = {"accept_encoding": accept_encoding,
+                 "user_agent": user_agent, "accept_lang": accept_lang}
+    return newheader
 
 
 def abort_if_invalid_country(lang):
