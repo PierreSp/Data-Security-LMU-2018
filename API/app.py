@@ -21,7 +21,7 @@ def Mobiledata(lang):
 
 def abort_if_invalid_country(lang):
     if str(lang) not in LANGUAGE_SUPPORT:
-        abort(410, message="Video does exist and shall not be deleted")
+        abort(410, message="Language is not supported so far")
 
 
 parser = reqparse.RequestParser()
@@ -49,7 +49,7 @@ class BrowserRequest(Resource):
         return Mobiledata(lang)
 
 
-# shows a list of all sipported languages
+# shows a list of all supported languages
 class Supported_languages(Resource):
 
     def get(self):
