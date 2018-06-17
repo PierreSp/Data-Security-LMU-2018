@@ -2,14 +2,14 @@
   "manifest_version": 2,
 
   "name": "Data Security Plugin",
-  "description": "This extension will change the User Agent",
-  "version": "0.0.2",
+  "description": "This extension will change the browser fingerprint based on tor browser",
+  "version": "0.0.3",
 
   "browser_action": {
    "default_icon": "icon.png",
    "default_popup": "popup.html"
   },
-  "permissions": ["webRequest", "webRequestBlocking", "http://*/*", "https://*/*"],
+  "permissions": ["webRequest", "webRequestBlocking", "http://*/*", "https://*/*","127.0.0.1","127.0.0.1/*"],
 
   "background": {
   "scripts": ["background.js"]
