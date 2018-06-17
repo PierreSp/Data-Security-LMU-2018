@@ -3,7 +3,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         //alert(JSON.stringify(info));
         // Replace the User-Agent header
         var headers = info.requestHeaders;
-        //headers.delete("X-DevTools-Emulate-Network-Conditions-Client-Id");
         var req = new XMLHttpRequest();
         req.open(
                 "GET",
@@ -16,7 +15,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         //}
         req.send(null);
         var resp = JSON.parse(req.responseText); // Parse to get json object, and avoid attacks
-        // alert(JSON.stringify(resp["user_agent"]));
+        alert(JSON.stringify(resp));
         headers.forEach(function(header, i) {
             if (header.name.toLowerCase() == 'user-agent') { 
                 header.value = JSON.stringify(resp["user_agent"]);
@@ -26,7 +25,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                 header.value = JSON.stringify(resp["accept"]);
             }
             if (header.name.toLowerCase() == 'accept-language') { 
-                header.value = 'en en_US;q=0.5';
+                header.value = '';
             }
             if (header.name.toLowerCase() == 'accept-encoding') { 
                 header.value = JSON.stringify(resp["accept_encoding"]);
@@ -44,8 +43,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         urls: [
             "https://www.whoishostingthis.com/*",
             "http://127.0.0.1:6789/*",
-            "http://www.useragentstring.com/index.php",
-            "http://www.useragentstring.com/*",
             "https://panopticlick.eff.org/*",
             "<all_urls>"
         ],
