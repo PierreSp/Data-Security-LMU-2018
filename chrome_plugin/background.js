@@ -10,26 +10,26 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                 "http://localhost:1991/browserreq/de", false);
         //req.onreadystatechange = function() {
         //  if (req.readyState == 4) {
-            // Wait till done and do not let attack code work here
+            // Wait till done
         //    var resp = JSON.parse(req.responseText);
         //  }
         //}
         req.send(null);
-        var resp = JSON.parse(req.responseText);
-        //alert(JSON.stringify(resp));
+        var resp = JSON.parse(req.responseText); // Parse to get json object, and avoid attacks
+        // alert(JSON.stringify(resp["user_agent"]));
         headers.forEach(function(header, i) {
             if (header.name.toLowerCase() == 'user-agent') { 
-                header.value = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36';
+                header.value = JSON.stringify(resp["user_agent"]);
             }
             if (header.name.toLowerCase() == 'accept') { 
                 //alert("changing");
-                header.value = '';
+                header.value = JSON.stringify(resp["accept"]);
             }
             if (header.name.toLowerCase() == 'accept-language') { 
                 header.value = 'en en_US;q=0.5';
             }
             if (header.name.toLowerCase() == 'accept-encoding') { 
-                header.value = '';
+                header.value = JSON.stringify(resp["accept_encoding"]);
             }
             if (header.name.toLowerCase() == 'referer') { 
                 header.value = '';

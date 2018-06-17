@@ -11,10 +11,27 @@ REQUESTEDLANGUAGE = []
 def Mobiledata(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agend, encoding and language which fits perfectly
+
+    # 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36';
     accept_encoding = ""
-    user_agent = "just a test"
-    accept_lang = lang
-    newheader = {"accept_encoding": accept_encoding,
+    user_agent = ""
+    accept = ""
+    accept_lang = "en en_US;q=0.5"  # lang
+    newheader = {"accept_encoding": accept_encoding, "accept": accept,
+                 "user_agent": user_agent, "accept_lang": accept_lang}
+    return newheader
+
+
+def Browserdata(lang):
+    # Here we need to pass a dict, which will be made to a json response containing
+    # the user agend, encoding and language which fits perfectly
+
+    # 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36';
+    accept_encoding = ""
+    user_agent = ""
+    accept = ""
+    accept_lang = "en en_US;q=0.5"  # lang
+    newheader = {"accept_encoding": accept_encoding, "accept": accept,
                  "user_agent": user_agent, "accept_lang": accept_lang}
     return newheader
 
@@ -46,7 +63,7 @@ class BrowserRequest(Resource):
 
     def get(self, lang):
         abort_if_invalid_country(lang)
-        return Mobiledata(lang)
+        return Browserdata(lang)
 
 
 # shows a list of all supported languages
