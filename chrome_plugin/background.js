@@ -1,9 +1,22 @@
 chrome.webRequest.onBeforeSendHeaders.addListener(
     function(info) {
-        alert(JSON.stringify(info));
+        //alert(JSON.stringify(info));
         // Replace the User-Agent header
         var headers = info.requestHeaders;
         //headers.delete("X-DevTools-Emulate-Network-Conditions-Client-Id");
+        var req = new XMLHttpRequest();
+        req.open(
+                "GET",
+                "http://localhost:1991/browserreq/de", false);
+        //req.onreadystatechange = function() {
+        //  if (req.readyState == 4) {
+            // Wait till done and do not let attack code work here
+        //    var resp = JSON.parse(req.responseText);
+        //  }
+        //}
+        req.send(null);
+        var resp = JSON.parse(req.responseText);
+        //alert(JSON.stringify(resp));
         headers.forEach(function(header, i) {
             if (header.name.toLowerCase() == 'user-agent') { 
                 header.value = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36';

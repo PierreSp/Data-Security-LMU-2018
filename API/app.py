@@ -12,7 +12,7 @@ def Mobiledata(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agend, encoding and language which fits perfectly
     accept_encoding = ""
-    user_agent = ""
+    user_agent = "just a test"
     accept_lang = lang
     newheader = {"accept_encoding": accept_encoding,
                  "user_agent": user_agent, "accept_lang": accept_lang}
@@ -56,9 +56,8 @@ class Supported_languages(Resource):
         return LANGUAGE_SUPPORT
 
 
-api.add_resource(Supported_languages, '/browserreq')
+api.add_resource(Supported_languages, '/langreq')
 api.add_resource(BrowserRequest, '/browserreq/<lang>')
-api.add_resource(Supported_languages, '/mobilereq')
 api.add_resource(MobileRequest, '/mobilereq/<lang>')
 
 
