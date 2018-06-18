@@ -1,12 +1,15 @@
 from flask import Flask
-from flask_restful import reqparse, abort, Api, Resource
 import tbselenium.common as cm
 from tbselenium.tbdriver import TorBrowserDriver
 import cachetools.func
 import numpy as np
+from flask_restful import reqparse, abort
+from flask_restful_swagger_2 import Api, Resource, Schema, swagger
+from flask_cors import CORS
 
 app = Flask(__name__)
-api = Api(app)
+CORS(app)
+api = Api(app, api_version='0.1')
 
 LANGUAGE_SUPPORT = ["de", "en", "en-US", "ru"]  # Requested languages, just an abstract for now
 REQUESTEDLANGUAGE = []
@@ -15,13 +18,53 @@ parser = reqparse.RequestParser()
 parser.add_argument('lang')
 
 
+class NewRequest(Schema):
+    type = 'language'
+    format = 'txt'
+
+
+class NewHeader(Schema):
+    type = 'object'
+    properties = {
+        'accept_encoding': {
+            'type': 'string',
+        },
+        'user_agent': {
+            'type': 'string'
+        },
+        'accept_lang': {
+            'type': 'string'
+        },
+        'name': {
+            'accept_code': 'string'
+        }
+    }
+    required = ['lang']
+
+
+@swagger.doc({
+    'tags': ['Request'],
+    'description': 'Generates common headers',
+    'parameters': [
+        {
+            'lang': 'text',
+            'schema': NewRequest,
+            'required': True,
+        }
+    ],
+    'responses': {
+        '201': {
+            'description': 'Send new header',
+            'schema': NewHeader,
+        }
+    }
+})
 @cachetools.func.ttl_cache(maxsize=6400, ttl=60 * 60 * 24)
 def FakeHeader(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agent, encoding and language which fits perfectly
 
-    # 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36';
-    # driver = TorBrowserDriver("tor-browser_en-US/", tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
+    # driver = TorBrowserDriver("../tor-browser_en-US/", tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
     # driver.get('https://check.torproject.org')
     # driver.load_url("https://check.torproject.org", wait_on_page=3)
     # print(driver.find_element_by("h1.on").text)
