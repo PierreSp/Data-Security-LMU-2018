@@ -15,20 +15,24 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
         //}
         req.send(null);
         var resp = JSON.parse(req.responseText); // Parse to get json object, and avoid attacks
-        alert(JSON.stringify(resp));
+        
         headers.forEach(function(header, i) {
             if (header.name.toLowerCase() == 'user-agent') { 
+                alert(header.value );
                 header.value = JSON.stringify(resp["user_agent"]);
+                alert(header.value );
             }
             if (header.name.toLowerCase() == 'accept') { 
                 //alert("changing");
                 header.value = JSON.stringify(resp["accept"]);
+                alert(header.value );
             }
             if (header.name.toLowerCase() == 'accept-language') { 
                 header.value = '';
             }
             if (header.name.toLowerCase() == 'accept-encoding') { 
                 header.value = JSON.stringify(resp["accept_encoding"]);
+                alert(header.value );
             }
             if (header.name.toLowerCase() == 'referer') { 
                 header.value = '';

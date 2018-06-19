@@ -6,12 +6,19 @@ import numpy as np
 from flask_restful import reqparse, abort
 from flask_restful_swagger_2 import Api, Resource, Schema, swagger
 from flask_cors import CORS
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import re
+import time
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app, api_version='0.1')
 
-LANGUAGE_SUPPORT = ["de", "en", "en-US", "ru"]  # Requested languages, just an abstract for now
+# Requested languages, just an abstract for now
+LANGUAGE_SUPPORT = ["de", "en", "en-US", "ru"]
 REQUESTEDLANGUAGE = []
 
 parser = reqparse.RequestParser()
@@ -64,14 +71,28 @@ def FakeHeader(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agent, encoding and language which fits perfectly
 
-    # driver = TorBrowserDriver("../tor-browser_en-US/", tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
+    driver = TorBrowserDriver("../tor-browser_en-US/",
+                              tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
     # driver.get('https://check.torproject.org')
     # driver.load_url("https://check.torproject.org", wait_on_page=3)
     # print(driver.find_element_by("h1.on").text)
-    test = np.random.normal(1000, 5, 1)
-    test = np.round(test)
-    accept_encoding = "gzip, deflate, br" + str(test)
-    user_agent = "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0"
+    driver.get("https://panopticlick.eff.org/tracker-nojs")
+    time.sleep(30)
+    wait = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.ID, "showFingerprintLink2")))
+    element = driver.find_element_by_id("showFingerprintLink2")
+    element.send_keys(Keys.RETURN)
+
+    table = driver.find_element_by_id("fingerprintTable")
+
+    table_string = table.text
+    user_agent = re.findall(
+        '(?<=User Agent)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)
+    user_agent = user_agent[0]
+    user_agent = user_agent[(user_agent.rfind('\n') + 1):]
+    print("USER AGENT:!!! " + str(user_agent))
+    accept_encoding = "gzip, deflate, br"
+    # user_agent = "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0"
     accept = "text/html, */*; q=0.01"
     accept_lang = "en-US,en;q=0.5"  # lang
     newheader = {"accept_encoding": accept_encoding,
@@ -108,6 +129,7 @@ class BrowserRequest(Resource):
 
 # shows a list of all supported languages
 class Supported_languages(Resource):
+
     def get(self):
         return LANGUAGE_SUPPORT
 
