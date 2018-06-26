@@ -2,7 +2,7 @@ from flask import Flask
 import tbselenium.common as cm
 from tbselenium.tbdriver import TorBrowserDriver
 import cachetools.func
-import numpy as np
+# import numpy as np
 from flask_restful import reqparse, abort
 from flask_restful_swagger_2 import Api, Resource, Schema, swagger
 from flask_cors import CORS
@@ -66,7 +66,7 @@ class NewHeader(Schema):
         }
     }
 })
-@cachetools.func.ttl_cache(maxsize=6400, ttl=60 * 60 * 24)
+@cachetools.func.ttl_cache(maxsize=10000, ttl=7 * 60 * 60 * 24)
 def FakeHeader(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agent, encoding and language which fits perfectly
@@ -86,18 +86,65 @@ def FakeHeader(lang):
     table = driver.find_element_by_id("fingerprintTable")
 
     table_string = table.text
+
+    # find and scrape user agent value
     user_agent = re.findall(
-        '(?<=User Agent)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)
-    user_agent = user_agent[0]
-    user_agent = user_agent[(user_agent.rfind('\n') + 1):]
-    print("USER AGENT:!!! " + str(user_agent))
-    accept_encoding = "gzip, deflate, br"
+        '(?<=User Agent)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)[0]
+    user_agent[(user_agent.rfind('\n') + 1):]
+
+    # find and scrape HTTP accept headers value
+    accept_headers = re.findall(
+        '(?<=HTTP_ACCEPT Headers)(.*?)(?=\nHash of WebGL fingerprint)', table_string, flags=re.DOTALL)[0]
+    accept_headers = accept_headers[(accept_headers.rfind('\n') + 1):]
+
+    # extract accept_lang value from HTTP accept headers
+    # ??? no spaces between languages, right?
+    accept_lang = accept_headers[(accept_headers.rfind(' ') + 1):]
+
+    # extract accept_encoding value from the rest of HTTP accept headers value
+    accept_headers_rest = accept_headers[:(accept_headers.rfind(' '))]
+
+    # ??? possible values are only gzip, compress, deflate, br, identity and *, right?
+    # ??? can it be only '*'? If not, we don't need the last if statement regarding to *
+    start_accept_encoding = len(accept_headers_rest)
+    if 'gzip' in accept_headers_rest:
+        if accept_headers_rest.find('gzip') < start_accept_encoding:
+            start_accept_encoding = accept_headers_rest.find('gzip')
+    if 'compress' in accept_headers_rest:
+        if accept_headers_rest.find('compress') < start_accept_encoding:
+            start_accept_encoding = accept_headers_rest.find('compress')
+    if 'deflate' in accept_headers_rest:
+        if accept_headers_rest.find('deflate') < start_accept_encoding:
+            start_accept_encoding = accept_headers_rest.find('deflate')
+    if 'br' in accept_headers_rest:
+        if accept_headers_rest.find('br') < start_accept_encoding:
+            start_accept_encoding = accept_headers_rest.find('br')
+    if 'identity' in accept_headers_rest:
+        if accept_headers_rest.find('identity') < start_accept_encoding:
+            start_accept_encoding = accept_headers_rest.find('identity')
+    if '*' in accept_headers_rest:
+        if '*/*' in accept_headers_rest:
+            if accept_headers_rest.rfind('*') == (accept_headers_rest.find('*') + 2):
+                start_accept_encoding = start_accept_encoding
+            else:
+                if accept_headers_rest.rfind('*') < start_accept_encoding:
+                    start_accept_encoding = accept_headers_rest.rfind('*')
+        else:
+            if accept_headers_rest.find('*') < start_accept_encoding:
+                start_accept_encoding = accept_headers_rest.find('*')
+    accept_encoding = accept_headers_rest[start_accept_encoding:]
+
+    # extract accept value as the rest of HTTP accept headers value
+    accept = accept_headers_rest[:(start_accept_encoding - 1)]
+
+    print('accept =', str(accept))
+    print('accept_encoding =', str(accept_encoding))
+    print('accept_lang =', str(accept_lang))
+
     # user_agent = "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0"
-    accept = "text/html, */*; q=0.01"
-    accept_lang = "en-US,en;q=0.5"  # lang
-    newheader = {"accept_encoding": accept_encoding,
-                 "user_agent": user_agent, "accept_lang": accept_lang,
-                 "accept_code": accept}
+    newheader = {"accept_encoding": str(accept_encoding),
+                 "user_agent": str(user_agent), "accept_lang": str(accept_lang),
+                 "accept_code": str(accept)}
     return newheader
 
 
