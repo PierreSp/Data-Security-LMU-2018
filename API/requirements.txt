@@ -1,0 +1,7 @@
+tbselenium==0.3.3
+flask_restful_swagger_2==0.35
+Flask==1.0.2
+Flask_RESTful==0.3.6
+selenium==3.12.0
+Flask_Cors==3.0.6
+cachetools==2.1.0

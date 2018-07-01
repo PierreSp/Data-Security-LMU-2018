@@ -9,8 +9,8 @@ Because of that we decided to get the information of the Tor Browser by remote c
 ### How to run
 
 1. Run the API (Assumes a linux system)
-  1. Install requirements.txt on a virtual env (make sure geckodriver version 17 is installed)
-  2. Run python api.py (for development and testing only, for productive systems use gunicorn with nginx proxy)
+  1. Install requirements.txt in API/ on a virtual env (make sure geckodriver version 17 is installed)
+  2. Run python api.py in API/ (for development and testing only, for productive systems use gunicorn with nginx proxy)
 2. Use the plugin
  1. Run chrome://extensions in chrome browser
  2. Drag the plugin folder in the chrome browser
