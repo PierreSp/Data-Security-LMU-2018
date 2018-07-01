@@ -11,9 +11,10 @@ Because of that we decided to get the information of the Tor Browser by remote c
 1. Run the API (Assumes a linux system)
     1. Install requirements.txt in API/ on a virtual env (make sure geckodriver version 17 is installed)
     1. Run python api.py in API/ (for development and testing only, for productive systems use gunicorn with nginx proxy)
-1. Use the plugin
+1. Activate the plugin
    1. Run chrome://extensions in chrome browser
    1. Drag the plugin folder in the chrome browser
+   1. Activate the plugin in chrome
 
 
  This plugin is also using the Canvas Defender Plugin (https://github.com/jomo/canvas-defender-firefox) for the detection of the fingerprinting. 
