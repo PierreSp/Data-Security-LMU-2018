@@ -4,7 +4,7 @@ from tbselenium.tbdriver import TorBrowserDriver
 import cachetools.func
 # import numpy as np
 from flask_restful import reqparse, abort
-from flask_restful_swagger_2 import Api, Resource, Schema, swagger
+from flask_restful_swagger_2 import Api, Resource
 from flask_cors import CORS
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -15,7 +15,7 @@ import time
 
 app = Flask(__name__)
 CORS(app)
-api = Api(app, api_version='0.1')
+api = Api(app, api_version='1.0')
 
 # Requested languages, just an abstract for now
 LANGUAGE_SUPPORT = ["de", "en", "en-US", "ru"]
@@ -25,47 +25,6 @@ parser = reqparse.RequestParser()
 parser.add_argument('lang')
 
 
-class NewRequest(Schema):
-    type = 'language'
-    format = 'txt'
-
-
-class NewHeader(Schema):
-    type = 'object'
-    properties = {
-        'accept_encoding': {
-            'type': 'string',
-        },
-        'user_agent': {
-            'type': 'string'
-        },
-        'accept_lang': {
-            'type': 'string'
-        },
-        'name': {
-            'accept_code': 'string'
-        }
-    }
-    required = ['lang']
-
-
-@swagger.doc({
-    'tags': ['Request'],
-    'description': 'Generates common headers',
-    'parameters': [
-        {
-            'lang': 'text',
-            'schema': NewRequest,
-            'required': True,
-        }
-    ],
-    'responses': {
-        '201': {
-            'description': 'Send new header',
-            'schema': NewHeader,
-        }
-    }
-})
 @cachetools.func.ttl_cache(maxsize=10000, ttl=7 * 60 * 60 * 24)
 def FakeHeader(lang):
     # Here we need to pass a dict, which will be made to a json response containing
@@ -78,7 +37,7 @@ def FakeHeader(lang):
     # print(driver.find_element_by("h1.on").text)
     driver.get("https://panopticlick.eff.org/tracker-nojs")
     time.sleep(30)
-    wait = WebDriverWait(driver, 20).until(
+    WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.ID, "showFingerprintLink2")))
     element = driver.find_element_by_id("showFingerprintLink2")
     element.send_keys(Keys.RETURN)
@@ -98,14 +57,11 @@ def FakeHeader(lang):
     accept_headers = accept_headers[(accept_headers.rfind('\n') + 1):]
 
     # extract accept_lang value from HTTP accept headers
-    # ??? no spaces between languages, right?
     accept_lang = accept_headers[(accept_headers.rfind(' ') + 1):]
 
     # extract accept_encoding value from the rest of HTTP accept headers value
     accept_headers_rest = accept_headers[:(accept_headers.rfind(' '))]
 
-    # ??? possible values are only gzip, compress, deflate, br, identity and *, right?
-    # ??? can it be only '*'? If not, we don't need the last if statement regarding to *
     start_accept_encoding = len(accept_headers_rest)
     if 'gzip' in accept_headers_rest:
         if accept_headers_rest.find('gzip') < start_accept_encoding:
