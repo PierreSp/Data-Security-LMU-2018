@@ -9,6 +9,7 @@ Because of that we decided to get the information of the Tor Browser by remote c
 ### How to run
 
 1. Run the API (Assumes a linux system)
+    1. Start the tor browser
     1. Install requirements.txt in API/ on a virtual env (make sure geckodriver version 17 is installed)
     1. Run python api.py in API/ (for development and testing only, for productive systems use gunicorn with nginx proxy)
 1. Activate the plugin
