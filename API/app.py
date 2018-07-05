@@ -91,6 +91,7 @@ def FakeHeader(lang):
     accept_encoding = accept_headers_rest[start_accept_encoding:]
 
     # extract accept value as the rest of HTTP accept headers value
+    print(accept_headers_rest)
     accept = accept_headers_rest[:(start_accept_encoding - 1)]
 
     print('accept =', str(accept))

@@ -49,6 +49,7 @@ storageGet(["enabled", "timer", "latestUpdate"], (elems = {})=>{
     const optionUrl = document.getElementById('option_url');
     optionUrl.addEventListener('click', function () {
         chrome.runtime.sendMessage({action: "open-options"});
+        alert("test");
         window.close();
     }, false);
     
