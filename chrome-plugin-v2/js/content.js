@@ -278,9 +278,17 @@ var spoofer_script = '(' + function () {
         var val = window.navigator[property];
         properties[property] = vecw(typeof(val) == 'function' ? val.bind(window.navigator) : val)
     }
+
+
+
     properties.mimeTypes = vecw({}, true);
     properties.plugins = vecw({}, true);
-    properties.userAgent = vecw({}, true);
+    properties.platform = {
+            value: 'Win32',
+            configurable: false,
+            enumerable: true,
+            writable: false
+        } // Property for platform
     // properties.platform = vecw(function (){return "Win32";}, false);
 
     
@@ -302,11 +310,15 @@ var spoofer_script = '(' + function () {
         })
         Object.defineProperty(properties.plugins.value, flash["name"], vecw(flash, true))
     } else {
+        console.log("noflash");
         //Empty 'arrays'
         Object.defineProperty(properties.plugins.value, 'length', vecw(0))
         // Object.defineProperty(properties.userAgent.value, 'length', vecw(0))
         Object.defineProperty(properties.mimeTypes.value, 'length', vecw(0))
     }
+
+
+
     var navigator = Object.create(window.navigator);
     Object.defineProperties(navigator, properties);
     try {
