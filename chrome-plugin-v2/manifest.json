@@ -1,6 +1,6 @@
 {
   "name": "Data Security Plugin",
-  "version" : "0.6.0",
+  "version" : "0.7.0",
   "description": "__MSG_appDesc__",
    "permissions": ["webRequest", "webRequestBlocking", "webNavigation", "tabs", "storage", "notifications", "http://*/*", "https://*/*"],
   "icons": { "16": "img/icon.png", "128": "img/128x128.png" },

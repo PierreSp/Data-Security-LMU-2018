@@ -45,7 +45,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     } else if (request.action === "open-options") {
         chrome.tabs.create({url: chrome.extension.getURL("/html/options.html")});
     } else if (request.action === "show-notification"){
-        notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${request.url} website`, request.url);
+        
+        var root_domain = request.url.split( '/' );
+        root_domain = root_domain[2];
+        var pattern_to_forbid = "*://" + root_domain + "/*"; // Create pattern to send to chrome api to block
+        alert(pattern_to_forbid);
+        notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${request.url} website. Disabled JS`, request.url);
     }
 });
 

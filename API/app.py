@@ -48,8 +48,9 @@ def FakeHeader(lang):
 
     # find and scrape user agent value
     user_agent = re.findall(
-        '(?<=User Agent)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)[0]
-    user_agent[(user_agent.rfind('\n') + 1):]
+        '(?<=Mozilla)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)[0]
+    # user_agent[(user_agent.rfind('\n') + 1):]
+    user_agent = "Mozilla" + str(user_agent)
 
     # find and scrape HTTP accept headers value
     accept_headers = re.findall(
