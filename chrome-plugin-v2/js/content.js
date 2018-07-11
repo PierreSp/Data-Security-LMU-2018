@@ -113,10 +113,10 @@ function overrideDefaultMethods(r, g, b, a, scriptId, storedObjectPrefix) {
                         for (var i = 0; i < height; i++) {
                             for (var j = 0; j < width; j++) {
                                 var index = ((i * (width * 4)) + (j * 4));
-                                imageData.data[index + 0] = imageData.data[index + 0] + r;
-                                imageData.data[index + 1] = imageData.data[index + 1] + g;
-                                imageData.data[index + 2] = imageData.data[index + 2] + b;
-                                imageData.data[index + 3] = imageData.data[index + 3] + a;
+                                imageData.data[index + 0] = 0;
+                                imageData.data[index + 1] = 0;
+                                imageData.data[index + 2] = 0;
+                                imageData.data[index + 3] = 0;
                             }
                         }
                         context.putImageData(imageData, 0, 0);
@@ -142,13 +142,14 @@ function overrideDefaultMethods(r, g, b, a, scriptId, storedObjectPrefix) {
                     var imageData = getImageData.apply(this, arguments);
                     var height = imageData.height;
                     var width = imageData.width;
+
                     for (var i = 0; i < height; i++) {
                         for (var j = 0; j < width; j++) {
                             var index = ((i * (width * 4)) + (j * 4));
-                            imageData.data[index + 0] = imageData.data[index + 0] + r;
-                            imageData.data[index + 1] = imageData.data[index + 1] + g;
-                            imageData.data[index + 2] = imageData.data[index + 2] + b;
-                            imageData.data[index + 3] = imageData.data[index + 3] + a;
+                            imageData.data[index + 0] = 0;
+                            imageData.data[index + 1] = 0;
+                            imageData.data[index + 2] = 0;
+                            imageData.data[index + 3] = 0;
                         }
                     }
                     showNotification();
@@ -289,7 +290,6 @@ var spoofer_script = '(' + function () {
             enumerable: true,
             writable: false
         } // Property for platform
-    // properties.platform = vecw(function (){return "Win32";}, false);
 
     
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));

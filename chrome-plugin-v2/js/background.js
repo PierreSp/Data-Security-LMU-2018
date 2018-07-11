@@ -21,7 +21,7 @@ storageGet(["data", "enabled", "latestUpdate"], (items = {})=>{
     data = items["data"];
     setIcon(enabled);
     if (data) {
-        dataHash = "a273d6a847f0e2a57fa0161158f12fed";
+        dataHash = generatedHash;
         data = JSON.parse(data);
     } else {
         generateNewFingerPrint()
@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     } else if (request.action === "show-notification"){
         generateNewFingerPrint()
             .then((generatedHash)=>{
-                dataHash = "a273d6a847f0e2a57fa0161158f12fed";
+                dataHash = generatedHash;
                 notifyUser(NotificationInfo.newHash.title, "New canvas noise hash #" + dataHash);
             });
 
