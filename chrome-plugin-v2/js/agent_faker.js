@@ -1,24 +1,8 @@
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
     function(info) {
-        // chrome.contentSettings['javascript'].set({
-        //     primaryPattern: "https://panopticlick.eff.org/",
-        //     setting: 'block'
-        // });
-    //     var test = chrome.contentSettings['javascript'].get({
-    //     primaryUrl: "https://panopticlick.eff.org/"
-    // }, function (details) {
-    //     chrome.contentSettings['javascript'].set({
-    //         primaryPattern: "<all_urls>",
-    //         setting: details.setting = 'block' 
-    //     })
-    // })
 
 // chrome.contentSettings['javascript'].get({ primaryUrl: "https://google.de/"}, function(details) {
-//   const value = details.setting;
-//   alert(value);
-// });
-// chrome.contentSettings['javascript'].get({ primaryUrl: "https://panopticlick.eff.org/"}, function(details) {
 //   const value = details.setting;
 //   alert(value);
 // });
@@ -37,8 +21,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
             }
             if (header.name.toLowerCase() == 'accept') { 
                 // header.value = resp["accept_code"];
-                // alert(resp["accept_code"]);
-                header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+                header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"; // tmp solution
+                // for some reason, amiunique does some weird stuff...
             }
             if (header.name.toLowerCase() == 'accept-language') { 
                 header.value = resp["accept_lang"];
@@ -57,7 +41,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     },
     // Request filter
     {
-        // Modify the headers for these pages
+        // Modify the header for each and every page
         urls: [
             "<all_urls>"
         ],

@@ -14,10 +14,10 @@ import re
 import time
 
 app = Flask(__name__)
-CORS(app)
-api = Api(app, api_version='1.0')
+CORS(app) # Needed for cross communication
+api = Api(app, api_version='1.0') # Make nice versioning
 
-# Requested languages, just an abstract for now
+# Requested languages, just an proof of concept for now
 LANGUAGE_SUPPORT = ["de", "en", "en-US", "ru"]
 REQUESTEDLANGUAGE = []
 
@@ -29,23 +29,22 @@ parser.add_argument('lang')
 def FakeHeader(lang):
     # Here we need to pass a dict, which will be made to a json response containing
     # the user agent, encoding and language which fits perfectly
+    # The crawled information are cached for 7 days
 
+    # Connect with tor browser and load panopticlick (without js) and load
+    # full list
     driver = TorBrowserDriver("../tor-browser_en-US/",
                               tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
-    # driver.get('https://check.torproject.org')
-    # driver.load_url("https://check.torproject.org", wait_on_page=3)
-    # print(driver.find_element_by("h1.on").text)
     driver.get("https://panopticlick.eff.org/tracker-nojs")
     time.sleep(30)
     WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.ID, "showFingerprintLink2")))
     element = driver.find_element_by_id("showFingerprintLink2")
     element.send_keys(Keys.RETURN)
-
     table = driver.find_element_by_id("fingerprintTable")
 
+    # Read out table and get all information we want to spoof
     table_string = table.text
-
     # find and scrape user agent value
     user_agent = re.findall(
         '(?<=Mozilla)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)[0]
@@ -92,14 +91,16 @@ def FakeHeader(lang):
     accept_encoding = accept_headers_rest[start_accept_encoding:]
 
     # extract accept value as the rest of HTTP accept headers value
-    print(accept_headers_rest)
     accept = accept_headers_rest[:(start_accept_encoding - 1)]
 
+    # Show information
+    print("----- Overview of crawled data: -----")
+    print("")
+    print(accept_headers_rest)
     print('accept =', str(accept))
     print('accept_encoding =', str(accept_encoding))
     print('accept_lang =', str(accept_lang))
 
-    # user_agent = "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0"
     newheader = {"accept_encoding": str(accept_encoding),
                  "user_agent": str(user_agent), "accept_lang": str(accept_lang),
                  "accept_code": str(accept)}
@@ -107,22 +108,18 @@ def FakeHeader(lang):
 
 
 def abort_if_invalid_country(lang):
+    # Feature for languate support. Not needed now. can be seen as abstract
     if str(lang) not in LANGUAGE_SUPPORT:
         abort(410, message="Language is not supported so far")
 
 
 # Mobile Area
 class MobileRequest(Resource):
+    # Mobile version same as regular one so far. SPecial features on Roadmap for version 2
 
     def get(self, lang):
         abort_if_invalid_country(lang)
         return FakeHeader(lang)
-
-    # def put(self, lang):
-    # Not needed so far
-    #     args = parser.parse_args()
-    #     lang = {'language': args['lang']}
-    #     return lang, 201
 
 
 class BrowserRequest(Resource):
@@ -132,7 +129,7 @@ class BrowserRequest(Resource):
         return FakeHeader(lang)
 
 
-# shows a list of all supported languages
+# shows a list of all supported languages (placeholder)
 class Supported_languages(Resource):
 
     def get(self):

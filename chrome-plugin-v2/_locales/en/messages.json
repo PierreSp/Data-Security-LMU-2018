@@ -1,8 +1,0 @@
-{
-  "appName": {
-    "message": "Data Security Plugin"
-  },
-  "appDesc": {
-    "message": "This plugin will hide your useraget and spoof some browser information. For better protection, websites which do fingerprinting will forbidden to use Javascript"
-  }
-}

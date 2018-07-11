@@ -3,7 +3,7 @@ const storageGet = chrome.storage.local.get;
 const HashLength = 30;
 const NotificationTimer = 5000;
 const NotificationInfo = {
-    newHash: { title: "Canvas Defender is active" },
+    newHash: { title: "Data security plugin is active" },
     detected: { title: "Possible fingerprinting attempt" },
 };
 const DisabledDomains = {};
@@ -56,6 +56,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         root_domain = root_domain[2];
         var pattern_to_forbid = "*://" + root_domain + "/*"; // Create pattern to send to chrome api to block
         // alert(pattern_to_forbid);
+        // Here we have code to disable JS if canvas creation is detected. 
+        // But disabled too many pages including fb, whatsapp,...
     //     var test = chrome.contentSettings['javascript'].get({
     //     primaryUrl: "https://" + root_domain + "/"
     // }, function (details) {
