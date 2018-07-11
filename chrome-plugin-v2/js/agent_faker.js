@@ -22,7 +22,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
 //   const value = details.setting;
 //   alert(value);
 // });
-
         
         var headers = info.requestHeaders;
         var req = new XMLHttpRequest();
@@ -37,8 +36,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                 // header.value = "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0";
             }
             if (header.name.toLowerCase() == 'accept') { 
-                header.value = resp["accept_code"];
-                // header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
+                // header.value = resp["accept_code"];
+                // alert(resp["accept_code"]);
+                header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
             }
             if (header.name.toLowerCase() == 'accept-language') { 
                 header.value = resp["accept_lang"];

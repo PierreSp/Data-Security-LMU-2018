@@ -21,7 +21,7 @@ storageGet(["data", "enabled", "latestUpdate"], (items = {})=>{
     data = items["data"];
     setIcon(enabled);
     if (data) {
-        dataHash = md5(data).substring(0, HashLength);
+        dataHash = "a273d6a847f0e2a57fa0161158f12fed";
         data = JSON.parse(data);
     } else {
         generateNewFingerPrint()
@@ -45,11 +45,26 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     } else if (request.action === "open-options") {
         chrome.tabs.create({url: chrome.extension.getURL("/html/options.html")});
     } else if (request.action === "show-notification"){
+        generateNewFingerPrint()
+            .then((generatedHash)=>{
+                dataHash = "a273d6a847f0e2a57fa0161158f12fed";
+                notifyUser(NotificationInfo.newHash.title, "New canvas noise hash #" + dataHash);
+            });
+
         
         var root_domain = request.url.split( '/' );
         root_domain = root_domain[2];
         var pattern_to_forbid = "*://" + root_domain + "/*"; // Create pattern to send to chrome api to block
-        alert(pattern_to_forbid);
+        // alert(pattern_to_forbid);
+    //     var test = chrome.contentSettings['javascript'].get({
+    //     primaryUrl: "https://" + root_domain + "/"
+    // }, function (details) {
+    //     chrome.contentSettings['javascript'].set({
+    //         primaryPattern: pattern_to_forbid,
+    //         setting: details.setting = 'block' 
+    //     })
+    // })
+
         notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${request.url} website. Disabled JS`, request.url);
     }
 });
