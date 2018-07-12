@@ -279,11 +279,8 @@ var spoofer_script = '(' + function () {
     var properties = {};
     for(var property in window.navigator) {
         var val = window.navigator[property];
-        // alert(property);
         properties[property] = vecw(typeof(val) == 'function' ? val.bind(window.navigator) : val);
-        // properties[property] = vecw({}, true);
     }
-//userAgent
 
 
     properties.mimeTypes = vecw({}, true);
@@ -295,20 +292,17 @@ var spoofer_script = '(' + function () {
             writable: false
         }; // Property for platform
     properties.userAgent = vecw({}, true);
+    properties.vendor = vecw({}, true);
 
     
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
     
     //Empty 'arrays'
     Object.defineProperty(properties.plugins.value, 'length', vecw(0));
-    // Object.defineProperty(properties.userAgent.value, 'length', vecw(0))
     Object.defineProperty(properties.mimeTypes.value, 'length', vecw(0));
     try{
         Object.defineProperty(properties.userAgent.value, 'length', vecw(0));
-    } catch(e){
-        // properties[property] = vecw({}, true);
-    
-    }
+    } catch(e){    }
 
 
 
@@ -331,12 +325,3 @@ var script = document.createElement('script');
 script.textContent = spoofer_script;
 (document.head||document.documentElement).appendChild(script);
 script.parentNode.removeChild(script);
-
-
-// var s = document.createElement('script');
-// s.src = chrome.extension.getURL('js/spoof_agent_js.js');
-// s.onload = function() {
-//     this.parentNode.removeChild(this);
-// };
-// (document.head||document.documentElement).appendChild(s);
-// s.parentNode.removeChild(s);
