@@ -69,10 +69,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         generateNewFingerPrint()
             .then((generatedHash)=>{
                 dataHash = generatedHash;
-                notifyUser(NotificationInfo.newHash.title, "New canvas noise hash #" + dataHash);
-            });
-
-        
+            });        
         var root_domain = request.url.split( '/' );
         root_domain = root_domain[2];
         var pattern_to_forbid = "*://" + root_domain + "/*"; // Create pattern to send to chrome api to block
@@ -88,7 +85,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     //     })
     // })
 
-        notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${request.url} website. Disabled JS`, request.url);
+        notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${root_domain} website.`, root_domain);
     }
 });
 

@@ -14,6 +14,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                 "http://localhost:1991/browserreq/de", false);
         req.send(null);
         var resp = JSON.parse(req.responseText); // Parse to get json object, and avoid attacks
+        alert(resp);
         headers.forEach(function(header, i) {
             if (header.name.toLowerCase() == 'user-agent') { 
                 header.value = resp["user_agent"];

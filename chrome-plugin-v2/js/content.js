@@ -292,7 +292,7 @@ var spoofer_script = '(' + function () {
             writable: false
         }; // Property for platform
     properties.userAgent = vecw({}, true);
-    properties.vendor = vecw({}, true);
+    // properties.vendor = vecw({}, true);
 
     
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
@@ -304,8 +304,6 @@ var spoofer_script = '(' + function () {
         Object.defineProperty(properties.userAgent.value, 'length', vecw(0));
     } catch(e){    }
 
-
-
     var navigator = Object.create(window.navigator);
     Object.defineProperties(navigator, properties);
     try {
@@ -315,9 +313,9 @@ var spoofer_script = '(' + function () {
 } + ')();';
 
 //Without CSP
-document.documentElement.setAttribute('onreset', spoofer_script);
-document.documentElement.dispatchEvent(new CustomEvent('reset'));
-document.documentElement.removeAttribute('onreset');
+// document.documentElement.setAttribute('onreset', spoofer_script);
+// document.documentElement.dispatchEvent(new CustomEvent('reset'));
+// document.documentElement.removeAttribute('onreset');
 
 // Write script text on head of each page to manipulate the navigation before
 // the website can get information. Costly for fpl, but necessary
