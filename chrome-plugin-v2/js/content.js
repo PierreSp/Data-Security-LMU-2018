@@ -286,11 +286,16 @@ var spoofer_script = '(' + function () {
             enumerable: true,
             writable: false
         }; // Property for platform
+        properties.timezone = {
+            value: 'Win32',
+            configurable: false,
+            enumerable: true,
+            writable: false
+        };
     properties.userAgent = vecw({}, true);
     properties.vendor = vecw({}, true);
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
     
-    //Empty 'arrays'
     Object.defineProperty(properties.plugins.value, 'length', vecw(0));
     Object.defineProperty(properties.mimeTypes.value, 'length', vecw(0));
     try{
@@ -302,6 +307,9 @@ var spoofer_script = '(' + function () {
     try {
         Object.defineProperty(window, 'navigator', vecw(navigator));
     } catch(e) {/*Cannot redefine property: navigator*/}
+
+    // Change timezone to -120 (which is the most common according to amiunique)
+    Date.prototype.getTimezoneOffset = function() { return -120 };
 
 } + ')();';
 

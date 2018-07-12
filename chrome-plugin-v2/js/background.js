@@ -92,6 +92,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     //         setting: details.setting = 'block' 
     //     })
     // })
+    
+
 
 
         notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${root_domain} website.`, root_domain);
