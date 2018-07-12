@@ -113,10 +113,10 @@ function overrideDefaultMethods(r, g, b, a, scriptId, storedObjectPrefix) {
                         for (var i = 0; i < height; i++) {
                             for (var j = 0; j < width; j++) {
                                 var index = ((i * (width * 4)) + (j * 4));
-                                imageData.data[index + 0] = 0;
-                                imageData.data[index + 1] = 0;
-                                imageData.data[index + 2] = 0;
-                                imageData.data[index + 3] = 0;
+                                imageData.data[index + 0] = imageData.data[index + 0] + r;
+                                imageData.data[index + 1] = imageData.data[index + 1] + g;
+                                imageData.data[index + 2] = imageData.data[index + 2] + b;
+                                imageData.data[index + 3] = imageData.data[index + 3] + a;
                             }
                         }
                         context.putImageData(imageData, 0, 0);
@@ -146,10 +146,10 @@ function overrideDefaultMethods(r, g, b, a, scriptId, storedObjectPrefix) {
                     for (var i = 0; i < height; i++) {
                         for (var j = 0; j < width; j++) {
                             var index = ((i * (width * 4)) + (j * 4));
-                            imageData.data[index + 0] = 0;
-                            imageData.data[index + 1] = 0;
-                            imageData.data[index + 2] = 0;
-                            imageData.data[index + 3] = 0;
+                            imageData.data[index + 0] = imageData.data[index + 0] + r;
+                            imageData.data[index + 1] = imageData.data[index + 1] + g;
+                            imageData.data[index + 2] = imageData.data[index + 2] + b;
+                            imageData.data[index + 3] = imageData.data[index + 3] + a;
                         }
                     }
                     showNotification();
@@ -274,12 +274,16 @@ var spoofer_script = '(' + function () {
         }
     }
     
+
+
     var properties = {};
     for(var property in window.navigator) {
         var val = window.navigator[property];
-        properties[property] = vecw(typeof(val) == 'function' ? val.bind(window.navigator) : val)
+        // alert(property);
+        properties[property] = vecw(typeof(val) == 'function' ? val.bind(window.navigator) : val);
+        // properties[property] = vecw({}, true);
     }
-
+//userAgent
 
 
     properties.mimeTypes = vecw({}, true);
@@ -289,32 +293,21 @@ var spoofer_script = '(' + function () {
             configurable: false,
             enumerable: true,
             writable: false
-        } // Property for platform
+        }; // Property for platform
+    properties.userAgent = vecw({}, true);
 
     
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
     
-    //Expose Flash
-    var flashMime = ALLOW_FLASH && window.navigator.mimeTypes["application/x-shockwave-flash"];
-    if(flashMime) {
-        console.log("disable flash");
-        var flash = flashMime.enabledPlugin;
-        Object.defineProperties(properties.mimeTypes.value, {
-            'length': vecw(1),
-            "application/x-shockwave-flash": vecw(flashMime, true),
-            0: vecw(flashMime)
-        })
-        Object.defineProperties(properties.plugins.value, {
-            'length': vecw(1),
-            0: vecw(flash)
-        })
-        Object.defineProperty(properties.plugins.value, flash["name"], vecw(flash, true))
-    } else {
-        console.log("noflash");
-        //Empty 'arrays'
-        Object.defineProperty(properties.plugins.value, 'length', vecw(0))
-        // Object.defineProperty(properties.userAgent.value, 'length', vecw(0))
-        Object.defineProperty(properties.mimeTypes.value, 'length', vecw(0))
+    //Empty 'arrays'
+    Object.defineProperty(properties.plugins.value, 'length', vecw(0));
+    // Object.defineProperty(properties.userAgent.value, 'length', vecw(0))
+    Object.defineProperty(properties.mimeTypes.value, 'length', vecw(0));
+    try{
+        Object.defineProperty(properties.userAgent.value, 'length', vecw(0));
+    } catch(e){
+        // properties[property] = vecw({}, true);
+    
     }
 
 

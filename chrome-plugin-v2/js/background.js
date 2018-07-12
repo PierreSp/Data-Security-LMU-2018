@@ -20,16 +20,37 @@ storageGet(["data", "enabled", "latestUpdate"], (items = {})=>{
     g_latestUpdate = latestUpdate;
     data = items["data"];
     setIcon(enabled);
-    if (data) {
-        dataHash = generatedHash;
-        data = JSON.parse(data);
-    } else {
-        generateNewFingerPrint()
-            .then((generatedHash)=>{
-                dataHash = generatedHash;
-            });
-    }
+    
+    generateNewFingerPrint()
+        .then((generatedHash)=>{
+            dataHash = generatedHash;
+        });
+    
 });
+
+// Playing with fonts 
+
+// chrome.fontSettings.getFontList(function(f_array){
+//     console.log(f_array);
+//     for(var font in f_array) {
+//         console.log(font[0]);
+
+//         if (font.fontId == "Wingdings 2")
+//         {
+//             console.log("found webdings2");
+//         }
+//         else if(font.fontId == "Wingdings 2")
+//         {
+//             console.log("found webdings3");
+//         }
+//         // else
+//         // {
+//         //     chrome.fontSettings.clearFont(font);
+//         // }
+//         // properties[property] = vecw({}, true);
+//     }
+// })
+
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === "panel-data-hash") {

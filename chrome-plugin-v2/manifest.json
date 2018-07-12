@@ -2,7 +2,7 @@
   "name": "Data Security Plugin",
   "version" : "0.8.0",
   "description": "Plugin for data security lecture. This plugin maked the browser look like the Tor Browser and disables Javascript on websites with aggresive fingerprinting.",
-   "permissions": ["webRequest", "webRequestBlocking", "webNavigation", "tabs", "storage", "notifications", "contentSettings","<all_urls>"],
+   "permissions": ["webRequest", "fontSettings", "webRequestBlocking", "webNavigation", "tabs", "storage", "notifications", "contentSettings","<all_urls>"],
   "icons": { "16": "img/icon.png", "128": "img/128x128.png" },
   "browser_action": {
     "default_icon": "img/icon.png",
