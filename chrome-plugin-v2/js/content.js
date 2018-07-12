@@ -286,12 +286,19 @@ var spoofer_script = '(' + function () {
             enumerable: true,
             writable: false
         }; // Property for platform
-        properties.timezone = {
-            value: 'Win32',
+    properties.language = {
+            value: 'en-US',
             configurable: false,
             enumerable: true,
             writable: false
-        };
+        }; // Property for language
+    properties.languages = {
+            value: ["en-US", "en"],
+            configurable: false,
+            enumerable: true,
+            writable: false
+        }; // Property for languages
+        
     properties.userAgent = vecw({}, true);
     properties.vendor = vecw({}, true);
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
