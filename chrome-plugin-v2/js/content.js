@@ -273,16 +273,11 @@ var spoofer_script = '(' + function () {
             writable: !!w
         }
     }
-    
-
-
     var properties = {};
     for(var property in window.navigator) {
         var val = window.navigator[property];
         properties[property] = vecw(typeof(val) == 'function' ? val.bind(window.navigator) : val);
     }
-
-
     properties.mimeTypes = vecw({}, true);
     properties.plugins = vecw({}, true);
     properties.platform = {
@@ -292,9 +287,7 @@ var spoofer_script = '(' + function () {
             writable: false
         }; // Property for platform
     properties.userAgent = vecw({}, true);
-    // properties.vendor = vecw({}, true);
-
-    
+    properties.vendor = vecw({}, true);
     Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
     
     //Empty 'arrays'

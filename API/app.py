@@ -6,12 +6,6 @@ import cachetools.func
 from flask_restful import reqparse, abort
 from flask_restful_swagger_2 import Api, Resource
 from flask_cors import CORS
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import re
-import time
 
 app = Flask(__name__)
 CORS(app)  # Needed for cross communication
