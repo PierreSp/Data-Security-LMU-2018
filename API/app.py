@@ -14,8 +14,8 @@ import re
 import time
 
 app = Flask(__name__)
-CORS(app) # Needed for cross communication
-api = Api(app, api_version='1.0') # Make nice versioning
+CORS(app)  # Needed for cross communication
+api = Api(app, api_version='1.0')  # Make nice versioning
 
 # Requested languages, just an proof of concept for now
 LANGUAGE_SUPPORT = ["de", "en", "en-US", "ru"]
@@ -35,68 +35,82 @@ def FakeHeader(lang):
     # full list
     driver = TorBrowserDriver("../tor-browser_en-US/",
                               tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
-    driver.get("https://panopticlick.eff.org/tracker-nojs")
-    time.sleep(30)
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.ID, "showFingerprintLink2")))
-    element = driver.find_element_by_id("showFingerprintLink2")
-    element.send_keys(Keys.RETURN)
-    table = driver.find_element_by_id("fingerprintTable")
+    driver.get("https://amiunique.org/fpNoJs")
+    # time.sleep(10)
+    # WebDriverWait(driver, 20).until(
+    #     EC.presence_of_element_located((By.ID, "platformFlashVal")))
 
-    # Read out table and get all information we want to spoof
-    table_string = table.text
-    # find and scrape user agent value
-    user_agent = re.findall(
-        '(?<=Mozilla)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)[0]
-    # user_agent[(user_agent.rfind('\n') + 1):]
-    user_agent = "Mozilla" + str(user_agent)
+    # import pdb; pdb.set_trace()
+    user_agent = driver.find_elements_by_xpath(
+        '//td[@id="userAgentHttpVal"]')[0].text.replace('"', '')
+    accept = driver.find_elements_by_xpath(
+        '//td[@id="acceptHttpVal"]')[0].text.replace('"', '')
+    accept_encoding = driver.find_elements_by_xpath(
+        '//td[@id="encodingHttpVal"]')[0].text.replace('"', '')
+    accept_lang = driver.find_elements_by_xpath(
+        '//td[@id="languageHttpVal"]')[0].text.replace('"', '')
 
-    # find and scrape HTTP accept headers value
-    accept_headers = re.findall(
-        '(?<=HTTP_ACCEPT Headers)(.*?)(?=\nHash of WebGL fingerprint)', table_string, flags=re.DOTALL)[0]
-    accept_headers = accept_headers[(accept_headers.rfind('\n') + 1):]
+    # driver.get("https://panopticlick.eff.org/tracker-nojs")
+    # time.sleep(30)
+    # WebDriverWait(driver, 20).until(
+    #     EC.presence_of_element_located((By.ID, "showFingerprintLink2")))
+    # element = driver.find_element_by_id("showFingerprintLink2")
+    # element.send_keys(Keys.RETURN)
+    # table = driver.find_element_by_id("fingerprintTable")
 
-    # extract accept_lang value from HTTP accept headers
-    accept_lang = accept_headers[(accept_headers.rfind(' ') + 1):]
+    # # Read out table and get all information we want to spoof
+    # table_string = table.text
+    # # find and scrape user agent value
+    # user_agent = re.findall(
+    #     '(?<=Mozilla)(.*?)(?=\nTouch Support)', table_string, flags=re.DOTALL)[0]
+    # # user_agent[(user_agent.rfind('\n') + 1):]
+    # user_agent = "Mozilla" + str(user_agent)
 
-    # extract accept_encoding value from the rest of HTTP accept headers value
-    accept_headers_rest = accept_headers[:(accept_headers.rfind(' '))]
+    # # find and scrape HTTP accept headers value
+    # accept_headers = re.findall(
+    #     '(?<=HTTP_ACCEPT Headers)(.*?)(?=\nHash of WebGL fingerprint)', table_string, flags=re.DOTALL)[0]
+    # accept_headers = accept_headers[(accept_headers.rfind('\n') + 1):]
 
-    start_accept_encoding = len(accept_headers_rest)
-    if 'gzip' in accept_headers_rest:
-        if accept_headers_rest.find('gzip') < start_accept_encoding:
-            start_accept_encoding = accept_headers_rest.find('gzip')
-    if 'compress' in accept_headers_rest:
-        if accept_headers_rest.find('compress') < start_accept_encoding:
-            start_accept_encoding = accept_headers_rest.find('compress')
-    if 'deflate' in accept_headers_rest:
-        if accept_headers_rest.find('deflate') < start_accept_encoding:
-            start_accept_encoding = accept_headers_rest.find('deflate')
-    if 'br' in accept_headers_rest:
-        if accept_headers_rest.find('br') < start_accept_encoding:
-            start_accept_encoding = accept_headers_rest.find('br')
-    if 'identity' in accept_headers_rest:
-        if accept_headers_rest.find('identity') < start_accept_encoding:
-            start_accept_encoding = accept_headers_rest.find('identity')
-    if '*' in accept_headers_rest:
-        if '*/*' in accept_headers_rest:
-            if accept_headers_rest.rfind('*') == (accept_headers_rest.find('*') + 2):
-                start_accept_encoding = start_accept_encoding
-            else:
-                if accept_headers_rest.rfind('*') < start_accept_encoding:
-                    start_accept_encoding = accept_headers_rest.rfind('*')
-        else:
-            if accept_headers_rest.find('*') < start_accept_encoding:
-                start_accept_encoding = accept_headers_rest.find('*')
-    accept_encoding = accept_headers_rest[start_accept_encoding:]
+    # # extract accept_lang value from HTTP accept headers
+    # accept_lang = accept_headers[(accept_headers.rfind(' ') + 1):]
 
-    # extract accept value as the rest of HTTP accept headers value
-    accept = accept_headers_rest[:(start_accept_encoding - 1)]
+    # # extract accept_encoding value from the rest of HTTP accept headers value
+    # accept_headers_rest = accept_headers[:(accept_headers.rfind(' '))]
+
+    # start_accept_encoding = len(accept_headers_rest)
+    # if 'gzip' in accept_headers_rest:
+    #     if accept_headers_rest.find('gzip') < start_accept_encoding:
+    #         start_accept_encoding = accept_headers_rest.find('gzip')
+    # if 'compress' in accept_headers_rest:
+    #     if accept_headers_rest.find('compress') < start_accept_encoding:
+    #         start_accept_encoding = accept_headers_rest.find('compress')
+    # if 'deflate' in accept_headers_rest:
+    #     if accept_headers_rest.find('deflate') < start_accept_encoding:
+    #         start_accept_encoding = accept_headers_rest.find('deflate')
+    # if 'br' in accept_headers_rest:
+    #     if accept_headers_rest.find('br') < start_accept_encoding:
+    #         start_accept_encoding = accept_headers_rest.find('br')
+    # if 'identity' in accept_headers_rest:
+    #     if accept_headers_rest.find('identity') < start_accept_encoding:
+    #         start_accept_encoding = accept_headers_rest.find('identity')
+    # if '*' in accept_headers_rest:
+    #     if '*/*' in accept_headers_rest:
+    #         if accept_headers_rest.rfind('*') == (accept_headers_rest.find('*') + 2):
+    #             start_accept_encoding = start_accept_encoding
+    #         else:
+    #             if accept_headers_rest.rfind('*') < start_accept_encoding:
+    #                 start_accept_encoding = accept_headers_rest.rfind('*')
+    #     else:
+    #         if accept_headers_rest.find('*') < start_accept_encoding:
+    #             start_accept_encoding = accept_headers_rest.find('*')
+    # accept_encoding = accept_headers_rest[start_accept_encoding:]
+
+    # # extract accept value as the rest of HTTP accept headers value
+    # accept = accept_headers_rest[:(start_accept_encoding - 1)]
 
     # Show information
     print("----- Overview of crawled data: -----")
     print("")
-    print(accept_headers_rest)
     print('accept =', str(accept))
     print('accept_encoding =', str(accept_encoding))
     print('accept_lang =', str(accept_lang))
@@ -115,7 +129,8 @@ def abort_if_invalid_country(lang):
 
 # Mobile Area
 class MobileRequest(Resource):
-    # Mobile version same as regular one so far. SPecial features on Roadmap for version 2
+    # Mobile version same as regular one so far. SPecial features on Roadmap
+    # for version 2
 
     def get(self, lang):
         abort_if_invalid_country(lang)
