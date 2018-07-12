@@ -73,10 +73,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         var root_domain = request.url.split( '/' );
         root_domain = root_domain[2];
         var pattern_to_forbid = "*://" + root_domain + "/*"; // Create pattern to send to chrome api to block
-        // alert(pattern_to_forbid);
+        // alert(pattern_to_forbid);https://firstpartysimulator.org
         // Here we have code to disable JS if canvas creation is detected. 
         // But disabled too many pages including fb, whatsapp,...
-    //     var test = chrome.contentSettings['javascript'].get({
+    //  var test = chrome.contentSettings['javascript'].get({
     //     primaryUrl: "https://" + root_domain + "/"
     // }, function (details) {
     //     chrome.contentSettings['javascript'].set({
@@ -84,6 +84,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     //         setting: details.setting = 'block' 
     //     })
     // })
+    //    var test = chrome.contentSettings['javascript'].get({
+    //     primaryUrl: "https://firstpartysimulator.org/"
+    // }, function (details) {
+    //     chrome.contentSettings['javascript'].set({
+    //         primaryPattern: "*://firstpartysimulator.org/*",
+    //         setting: details.setting = 'block' 
+    //     })
+    // })
+
 
         notifyUser(NotificationInfo.detected.title, `Possible attempt of reading canvas fingerprint is detected on ${root_domain} website.`, root_domain);
     }

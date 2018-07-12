@@ -14,16 +14,13 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
                 "http://localhost:1991/browserreq/de", false);
         req.send(null);
         var resp = JSON.parse(req.responseText); // Parse to get json object, and avoid attacks
-        alert(resp);
         headers.forEach(function(header, i) {
             if (header.name.toLowerCase() == 'user-agent') { 
                 header.value = resp["user_agent"];
-                // header.value = "Mozilla/5.0 (Windows NT 6.1; rv:52.0) Gecko/20100101 Firefox/52.0";
             }
             if (header.name.toLowerCase() == 'accept') { 
-                // header.value = resp["accept_code"];
-                header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"; // tmp solution
-                // for some reason, amiunique does some weird stuff...
+                header.value = resp["accept_code"];
+                // header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"; // tmp solution
             }
             if (header.name.toLowerCase() == 'accept-language') { 
                 header.value = resp["accept_lang"];
