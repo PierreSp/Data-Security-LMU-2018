@@ -25,16 +25,11 @@ def FakeHeader(lang):
     # the user agent, encoding and language which fits perfectly
     # The crawled information are cached for 7 days
 
-    # Connect with tor browser and load panopticlick (without js) and load
+    # Connect with tor browser and load amiunique or panopticlick (without js) and load
     # full list
     driver = TorBrowserDriver("../tor-browser_en-US/",
                               tor_cfg=cm.USE_RUNNING_TOR, socks_port=9150)
     driver.get("https://amiunique.org/fpNoJs")
-    # time.sleep(10)
-    # WebDriverWait(driver, 20).until(
-    #     EC.presence_of_element_located((By.ID, "platformFlashVal")))
-
-    # import pdb; pdb.set_trace()
     user_agent = driver.find_elements_by_xpath(
         '//td[@id="userAgentHttpVal"]')[0].text.replace('"', '')
     accept = driver.find_elements_by_xpath(
@@ -43,6 +38,9 @@ def FakeHeader(lang):
         '//td[@id="encodingHttpVal"]')[0].text.replace('"', '')
     accept_lang = driver.find_elements_by_xpath(
         '//td[@id="languageHttpVal"]')[0].text.replace('"', '')
+
+    # Panopticlick version
+
 
     # driver.get("https://panopticlick.eff.org/tracker-nojs")
     # time.sleep(30)

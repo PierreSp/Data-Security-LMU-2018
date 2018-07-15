@@ -20,7 +20,6 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
             }
             if (header.name.toLowerCase() == 'accept') { 
                 header.value = resp["accept_code"];
-                // header.value = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"; // tmp solution
             }
             if (header.name.toLowerCase() == 'accept-language') { 
                 header.value = resp["accept_lang"];
