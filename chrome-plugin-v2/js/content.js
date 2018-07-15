@@ -265,7 +265,7 @@ var spoofer_script = '(' + function () {
     if(!window.navigator.mimeTypes) return;
     
     // Create function which returns objects valid for navigator properties
-    function vecw(val, e, c, w) {
+    function write_chrome_props(val, e, c, w) {
         return {
             value: val,
             enumerable: !!e,
@@ -276,10 +276,10 @@ var spoofer_script = '(' + function () {
     var properties = {};
     for(var property in window.navigator) {
         var val = window.navigator[property];
-        properties[property] = vecw(typeof(val) == 'function' ? val.bind(window.navigator) : val);
+        properties[property] = write_chrome_props(typeof(val) == 'function' ? val.bind(window.navigator) : val);
     }
-    properties.mimeTypes = vecw({}, true);
-    properties.plugins = vecw({}, true);
+    properties.mimeTypes = write_chrome_props({}, true);
+    properties.plugins = write_chrome_props({}, true);
     properties.platform = {
             value: 'Win32',
             configurable: false,
@@ -299,20 +299,20 @@ var spoofer_script = '(' + function () {
             writable: false
         }; // Property for languages
         
-    properties.userAgent = vecw({}, true);
-    properties.vendor = vecw({}, true);
-    Object.defineProperty(properties.plugins.value, "refresh", vecw(function() {}));
+    properties.userAgent = write_chrome_props({}, true);
+    properties.vendor = write_chrome_props({}, true);
+    Object.defineProperty(properties.plugins.value, "refresh", write_chrome_props(function() {}));
     
-    Object.defineProperty(properties.plugins.value, 'length', vecw(0));
-    Object.defineProperty(properties.mimeTypes.value, 'length', vecw(0));
+    Object.defineProperty(properties.plugins.value, 'length', write_chrome_props(0));
+    Object.defineProperty(properties.mimeTypes.value, 'length', write_chrome_props(0));
     try{
-        Object.defineProperty(properties.userAgent.value, 'length', vecw(0));
+        Object.defineProperty(properties.userAgent.value, 'length', write_chrome_props(0));
     } catch(e){    }
 
     var navigator = Object.create(window.navigator);
     Object.defineProperties(navigator, properties);
     try {
-        Object.defineProperty(window, 'navigator', vecw(navigator));
+        Object.defineProperty(window, 'navigator', write_chrome_props(navigator));
     } catch(e) {/*Cannot redefine property: navigator*/}
 
     // Change timezone to -120 (which is the most common according to amiunique)
